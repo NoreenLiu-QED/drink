@@ -5,7 +5,7 @@
   <title>訂飲料</title>
 </head>
 <body>
-  <h1>訂飲料</h1>
+  <h1>今天訂飲料</h1>
   <div>
     名稱：<input id="name"><br><br>
     品項：<select id="item"></select><br><br>
@@ -22,9 +22,16 @@ let menu = [];
 
 async function loadMenu() {
   const res = await fetch(SCRIPT_URL);
-  menu = await res.json();
-  
+  const data = await res.json();
+
+  if (data.error) {
+    alert(data.error);
+    return;
+  }
+
+  menu = data;
   const itemSelect = document.querySelector("#item");
+  itemSelect.innerHTML = "";
   menu.forEach((m, idx) => {
     const option = document.createElement("option");
     option.value = idx;
@@ -32,7 +39,7 @@ async function loadMenu() {
     itemSelect.appendChild(option);
   });
 
-  itemSelect.addEventListener("change", () => updateOptions());
+  itemSelect.addEventListener("change", updateOptions);
   updateOptions();
 }
 
@@ -65,7 +72,7 @@ function updateOptions() {
   toppingDiv.innerHTML = "";
   toppings.forEach(t => {
     const label = document.createElement("label");
-    label.innerHTML = `<input type="checkbox" value="${t}"> ${t}`;
+    label.innerHTML = `<input type="checkbox" value="${t}"> ${t} `;
     toppingDiv.appendChild(label);
   });
 }
