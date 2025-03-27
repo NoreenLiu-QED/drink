@@ -1,26 +1,63 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>訂飲料</title>
-  <script src="config.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>訂飲料</title>
 </head>
-<body>
-  <h1>今天訂飲料：<span id="storeName">菜單載入中…</span></h1>
-<div>v0.4 ps.他是免費的他很慢，請耐心等待</div>
-  <div>
-    名稱：<input id="name"><br><br>
-    品項：<select id="item"></select><br><br>
-    價格：<input id="price" readonly><br><br>
 
-    糖度：<div id="sugar"></div><br>
-    冰度：<div id="ice"></div><br>
-
-    加料：<div id="toppings"></div><br>
-    <button onclick="submitOrder()">送出</button>
-  </div>
-
-<script src="main.js">
-</script>
+<body class="bg-body-secondary">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-lg-6 mx-auto">
+                <h1 class="d-flex align-items-center flex-wrap fs-3 fw-bold mt-3 mb-0">
+                    <span>今天訂飲料</span>
+                    <span class="text-secondary fs-6 ms-1">v0.4</span>
+                </h1>
+                <p class="text-secondary mb-0">ps.它是免費的它很慢，請耐心等待</p>
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <h2 class="fs-3 fw-bold">🧋<span id="storeName">菜單載入中…</span></h2>
+                        <hr>
+                        <form>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">訂購人名稱</label>
+                                <input id="name" type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="item" class="form-label">品項</label>
+                                <select id="item" class="form-select"></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">價格</label>
+                                <input id="price" type="text" class="form-control" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sugar" class="form-label">糖度</label>
+                                <div id="sugar" class=""></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sugar" class="form-label">冰度</label>
+                                <div id="ice" class=""></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sugar" class="form-label">加料</label>
+                                <div id="toppings" class=""></div>
+                            </div>
+                            <hr>
+                            <button class="btn btn-lg btn-primary w-100" onclick="submitOrder()" type="button">送出</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="config.js"></script>
+    <script src="main.js">
+    </script>
 </body>
+
 </html>
