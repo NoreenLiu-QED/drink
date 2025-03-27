@@ -3,38 +3,38 @@ let menu = [];
 async function loadMenu() {
     const res = await fetch(SCRIPT_URL);
     const data = await res.json();
-  
+
     if (data.error) {
-      alert(data.error);
-      document.querySelector("#storeName").textContent = "（今日沒有開團）";
-      document.querySelector("#toppingprice").textContent = data.toppingPrice || "無資料";
-      return;
+        alert(data.error);
+        document.querySelector("#storeName").textContent = "（今日沒有開團）";
+        document.querySelector("#toppingprice").textContent = data.toppingPrice || "無資料";
+        return;
     }
-  
+
     // ✅ 顯示店名與加料參考價
     document.querySelector("#storeName").textContent = data.storeName || "未知店名";
     const toppingPriceEl = document.querySelector("#toppingprice");
-if (data.toppingPrice) {
-  toppingPriceEl.textContent = data.toppingPrice.split(",").join("\n");
-} else {
-  toppingPriceEl.textContent = "無資料";
-}
-  
+    if (data.toppingPrice) {
+        toppingPriceEl.textContent = data.toppingPrice.split(",").join("\n");
+    } else {
+        toppingPriceEl.textContent = "無資料";
+    }
+
     // ✅ 解析菜單
     menu = data.menu || [];
     const itemSelect = document.querySelector("#item");
     itemSelect.innerHTML = "";
-  
+
     menu.forEach((m, idx) => {
-      const option = document.createElement("option");
-      option.value = idx;
-      option.textContent = `${m.品項}（${m.價格}元）`;
-      itemSelect.appendChild(option);
+        const option = document.createElement("option");
+        option.value = idx;
+        option.textContent = `${m.品項}（${m.價格}元）`;
+        itemSelect.appendChild(option);
     });
-  
+
     itemSelect.addEventListener("change", updateOptions);
     updateOptions();
-  }
+}
 
 function renderRadioButtons(containerId, name, options) {
     const container = document.querySelector(`#${containerId}`);
@@ -63,7 +63,7 @@ function renderCheckboxs(containerId, name, options) {
         const id = `${name}${String(idx + 1).padStart(2, '0')}`;
 
         const wrapper = document.createElement("div");
-        wrapper.className = "form-check form-check-inline cursor-pointer";
+        wrapper.className = "form-check cursor-pointer";
 
         wrapper.innerHTML = `
             <input class="form-check-input" type="checkbox" id="${id}" name="${name}" value="${opt}">
@@ -88,7 +88,11 @@ function updateOptions() {
     renderCheckboxs("toppings", "toppings", toppings);
 }
 
-function submitOrder() {
+async function submitOrder() {
+    const btn = document.querySelector("button"); // 取送出按鈕
+    btn.disabled = true;
+    btn.textContent = "送出中...";
+
     const idx = document.querySelector("#item").value;
     const m = menu[idx];
 
@@ -102,19 +106,23 @@ function submitOrder() {
         toppings: Array.from(document.querySelectorAll("#toppings input:checked")).map(el => el.value).join(", ")
     });
 
-    fetch(`${SCRIPT_URL}?${params.toString()}`)
-        .then(res => res.json())
-        .then(result => {
-            if (result.result === "success") {
-                location.href = "submitted.html";
-            } else {
-                alert("送出失敗！");
-            }
-        })
-        .catch(err => {
-            alert("送出錯誤！");
-            console.error(err);
-        });
+    try {
+        const res = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+        const result = await res.json();
+
+        if (result.result === "success") {
+            location.href = "submitted.html";
+        } else {
+            alert("送出失敗！");
+        }
+    } catch (err) {
+        alert("送出錯誤！");
+        console.error(err);
+    } finally {
+        // 使用者還在頁面才恢復按鈕
+        btn.disabled = false;
+        btn.textContent = "送出";
+    }
 }
 
 loadMenu();

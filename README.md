@@ -7,3 +7,4 @@
 - main.js 讓前端載入接進來的各種資料
 - index.html 前端
 - submitted.html 成功送出後的頁面
+- code.gs 需要在Google sheet的APPs Script部署，此為版控用檔案
