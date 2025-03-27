@@ -105,7 +105,12 @@ async function submitOrder() {
   });
 
   const result = await res.json();
-  alert(result.result === "success" ? "送出成功！" : "送出失敗！");
+  if (result.result === "success") {
+  location.href = "submitted.html";  // 這是你要跳轉的畫面
+} else {
+  alert("送出失敗！");
+}
+
 }
 
 loadMenu();
