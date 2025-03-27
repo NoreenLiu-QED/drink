@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>訂飲料</title>
+  <script src="config.js"></script>
 </head>
 <body>
-  <h1>今天訂飲料</h1>
+  <h1>今天訂飲料：<span id="storeName">載入中...</span></h1>
+
   <div>
     名稱：<input id="name"><br><br>
     品項：<select id="item"></select><br><br>
@@ -17,7 +19,6 @@
   </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKyDp8F1X74W87Zdz0A9ZMc8R96bG5jrrrPtUiVnlDGa1_EDv_LFGepVJf1ENrIBmnLA/exec"; // APP Script
 let menu = [];
 
 async function loadMenu() {
@@ -26,8 +27,12 @@ async function loadMenu() {
 
   if (data.error) {
     alert(data.error);
+    document.querySelector("#storeName").textContent = "（今日無開團）";
     return;
   }
+
+  // 顯示店名在 <h1>
+  document.querySelector("#storeName").textContent = data[0]?.店名 || "未知店名";
 
   menu = data;
   const itemSelect = document.querySelector("#item");
