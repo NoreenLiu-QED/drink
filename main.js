@@ -77,10 +77,12 @@ function renderCheckboxs(containerId, name, options) {
 function updateOptions() {
     const idx = document.querySelector("#item").value;
     const m = menu[idx];
+    const size = m.大杯小杯.split(",");
     const sugar = m.糖度選項.split(",");
     const ice = m.冰度選項.split(",");
     const toppings = m.加料選項.split(",");
 
+    renderRadioButtons("size", "size", size);
     renderRadioButtons("sugar", "sugar", sugar);
     renderRadioButtons("ice", "ice", ice);
     renderCheckboxs("toppings", "toppings", toppings);
@@ -94,6 +96,7 @@ function submitOrder() {
         name: document.querySelector("#name").value,
         item: m.品項,
         price: parseInt(document.querySelector("#price").value),
+        size: document.querySelector('input[name="size"]:checked').value,
         sugar: document.querySelector('input[name="sugar"]:checked').value,
         ice: document.querySelector('input[name="ice"]:checked').value,
         toppings: Array.from(document.querySelectorAll("#toppings input:checked")).map(el => el.value).join(", ")
