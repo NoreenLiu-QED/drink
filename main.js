@@ -3,28 +3,38 @@ let menu = [];
 async function loadMenu() {
     const res = await fetch(SCRIPT_URL);
     const data = await res.json();
-
+  
     if (data.error) {
-        alert(data.error);
-        document.querySelector("#storeName").textContent = "（今日無開團）";
-        return;
+      alert(data.error);
+      document.querySelector("#storeName").textContent = "（今日沒有開團）";
+      document.querySelector("#toppingprice").textContent = data.toppingPrice || "無資料";
+      return;
     }
-    const storeName = data[0] && data[0].店名 ? data[0].店名 : "未知店名";
-    document.querySelector("#storeName").textContent = storeName;
-
-    menu = data;
+  
+    // ✅ 顯示店名與加料參考價
+    document.querySelector("#storeName").textContent = data.storeName || "未知店名";
+    const toppingPriceEl = document.querySelector("#toppingprice");
+if (data.toppingPrice) {
+  toppingPriceEl.textContent = data.toppingPrice.split(",").join("\n");
+} else {
+  toppingPriceEl.textContent = "無資料";
+}
+  
+    // ✅ 解析菜單
+    menu = data.menu || [];
     const itemSelect = document.querySelector("#item");
     itemSelect.innerHTML = "";
+  
     menu.forEach((m, idx) => {
-        const option = document.createElement("option");
-        option.value = idx;
-        option.textContent = `${m.品項}（${m.價格}元）`;
-        itemSelect.appendChild(option);
+      const option = document.createElement("option");
+      option.value = idx;
+      option.textContent = `${m.品項}（${m.價格}元）`;
+      itemSelect.appendChild(option);
     });
-
+  
     itemSelect.addEventListener("change", updateOptions);
     updateOptions();
-}
+  }
 
 function renderRadioButtons(containerId, name, options) {
     const container = document.querySelector(`#${containerId}`);
@@ -67,8 +77,6 @@ function renderCheckboxs(containerId, name, options) {
 function updateOptions() {
     const idx = document.querySelector("#item").value;
     const m = menu[idx];
-    document.querySelector("#price").value = m.價格;
-
     const sugar = m.糖度選項.split(",");
     const ice = m.冰度選項.split(",");
     const toppings = m.加料選項.split(",");
@@ -85,7 +93,7 @@ function submitOrder() {
     const params = new URLSearchParams({
         name: document.querySelector("#name").value,
         item: m.品項,
-        price: m.價格,
+        price: parseInt(document.querySelector("#price").value),
         sugar: document.querySelector('input[name="sugar"]:checked').value,
         ice: document.querySelector('input[name="ice"]:checked').value,
         toppings: Array.from(document.querySelectorAll("#toppings input:checked")).map(el => el.value).join(", ")

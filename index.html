@@ -14,7 +14,7 @@
             <div class="col-md-8 col-lg-6 mx-auto">
                 <h1 class="d-flex align-items-center flex-wrap fs-3 fw-bold mt-3 mb-0">
                     <span>今天訂飲料</span>
-                    <span class="text-secondary fs-6 ms-1">v0.4</span>
+                    <span class="text-secondary fs-6 ms-1">v0.5</span>
                 </h1>
                 <p class="text-secondary mb-0">ps.它是免費的它很慢，請耐心等待</p>
                 <div class="card mt-2">
@@ -31,10 +31,6 @@
                                 <select id="item" class="form-select"></select>
                             </div>
                             <div class="mb-3">
-                                <label for="price" class="form-label">價格</label>
-                                <input id="price" type="text" class="form-control" disabled>
-                            </div>
-                            <div class="mb-3">
                                 <label for="sugar" class="form-label">糖度</label>
                                 <div id="sugar" class=""></div>
                             </div>
@@ -46,6 +42,15 @@
                                 <label for="sugar" class="form-label">加料</label>
                                 <div id="toppings" class=""></div>
                             </div>
+                            <div class="mb-3">
+                              <label for="toppingprice" class="form-label">加料$$</label>
+                              <div id="toppingprice" style="white-space: pre-line;">載入中…</div>
+                          </div>
+                            <div class="mb-3">
+                              <label for="price" class="form-label">價格</label>
+                              <div>請大家參考飲料大小&加料$$自己改ㄛ 3Q</div>
+                              <input id="price" type="text" class="form-control">
+                          </div>
                             <hr>
                             <button class="btn btn-lg btn-primary w-100" onclick="submitOrder()" type="button">送出</button>
                         </form>
