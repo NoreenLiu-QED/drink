@@ -49,6 +49,16 @@ async function loadMenu() {
   updateOptions();
 }
 
+function renderRadioButtons(containerId, name, options) {
+  const container = document.querySelector(`#${containerId}`);
+  container.innerHTML = "";
+  options.forEach((opt, idx) => {
+    const label = document.createElement("label");
+    label.innerHTML = `<input type="radio" name="${name}" value="${opt}" ${idx === 0 ? "checked" : ""}> ${opt} `;
+    container.appendChild(label);
+  });
+}
+
 function updateOptions() {
   const idx = document.querySelector("#item").value;
   const m = menu[idx];
@@ -58,25 +68,10 @@ function updateOptions() {
   const ice = m.冰度選項.split(",");
   const toppings = m.加料選項.split(",");
 
-  // 產生糖度 radio
-  const sugarDiv = document.querySelector("#sugar");
-  sugarDiv.innerHTML = "";
-  sugar.forEach((s, i) => {
-    const label = document.createElement("label");
-    label.innerHTML = `<input type="radio" name="sugar" value="${s}" ${i === 0 ? "checked" : ""}> ${s} `;
-    sugarDiv.appendChild(label);
-  });
+  renderRadioButtons("sugar", "sugar", sugar);
+  renderRadioButtons("ice", "ice", ice);
 
-  // 產生冰度 radio
-  const iceDiv = document.querySelector("#ice");
-  iceDiv.innerHTML = "";
-  ice.forEach((i, idx) => {
-    const label = document.createElement("label");
-    label.innerHTML = `<input type="radio" name="ice" value="${i}" ${idx === 0 ? "checked" : ""}> ${i} `;
-    iceDiv.appendChild(label);
-  });
-
-  // 加料 checkbox
+  // 加料 checkbox 
   const toppingDiv = document.querySelector("#toppings");
   toppingDiv.innerHTML = "";
   toppings.forEach(t => {
@@ -102,7 +97,7 @@ async function submitOrder() {
   const res = await fetch(SCRIPT_URL, {
     method: "POST",
     headers: {
-    "Content-Type": "application/json"  // 調整CROS問題
+    "Content-Type": "application/json"  // 調整CROS
   },
     body: JSON.stringify(data)
   });
