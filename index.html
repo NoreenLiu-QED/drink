@@ -7,7 +7,7 @@
 </head>
 <body>
   <h1>今天訂飲料：<span id="storeName">載入中...</span></h1>
-<div>v0.1</div>
+<div>v0.2</div>
   <div>
     名稱：<input id="name"><br><br>
     品項：<select id="item"></select><br><br>
@@ -101,6 +101,9 @@ async function submitOrder() {
 
   const res = await fetch(SCRIPT_URL, {
     method: "POST",
+    headers: {
+    "Content-Type": "application/json"  // 調整CROS問題
+  },
     body: JSON.stringify(data)
   });
 
