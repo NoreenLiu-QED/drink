@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>訂飲料</title>
+</head>
+<body>
+  <h1>訂飲料</h1>
+  <div>
+    名稱：<input id="name"><br><br>
+    品項：<select id="item"></select><br><br>
+    價格：<input id="price" readonly><br><br>
+    糖度：<select id="sugar"></select><br><br>
+    冰度：<select id="ice"></select><br><br>
+    加料：<div id="toppings"></div><br>
+    <button onclick="submitOrder()">送出</button>
+  </div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKyDp8F1X74W87Zdz0A9ZMc8R96bG5jrrrPtUiVnlDGa1_EDv_LFGepVJf1ENrIBmnLA/exec"; // APP Script
+let menu = [];
+
+async function loadMenu() {
+  const res = await fetch(SCRIPT_URL);
+  menu = await res.json();
+  
+  const itemSelect = document.querySelector("#item");
+  menu.forEach((m, idx) => {
+    const option = document.createElement("option");
+    option.value = idx;
+    option.textContent = `${m.品項}（${m.價格}元）`;
+    itemSelect.appendChild(option);
+  });
+
+  itemSelect.addEventListener("change", () => updateOptions());
+  updateOptions();
+}
+
+function updateOptions() {
+  const idx = document.querySelector("#item").value;
+  const m = menu[idx];
+  document.querySelector("#price").value = m.價格;
+
+  const sugar = m.糖度選項.split(",");
+  const ice = m.冰度選項.split(",");
+  const toppings = m.加料選項.split(",");
+
+  const sugarSelect = document.querySelector("#sugar");
+  sugarSelect.innerHTML = "";
+  sugar.forEach(s => {
+    const opt = document.createElement("option");
+    opt.textContent = s;
+    sugarSelect.appendChild(opt);
+  });
+
+  const iceSelect = document.querySelector("#ice");
+  iceSelect.innerHTML = "";
+  ice.forEach(i => {
+    const opt = document.createElement("option");
+    opt.textContent = i;
+    iceSelect.appendChild(opt);
+  });
+
+  const toppingDiv = document.querySelector("#toppings");
+  toppingDiv.innerHTML = "";
+  toppings.forEach(t => {
+    const label = document.createElement("label");
+    label.innerHTML = `<input type="checkbox" value="${t}"> ${t}`;
+    toppingDiv.appendChild(label);
+  });
+}
+
+async function submitOrder() {
+  const idx = document.querySelector("#item").value;
+  const m = menu[idx];
+
+  const data = {
+    name: document.querySelector("#name").value,
+    item: m.品項,
+    price: parseInt(m.價格),
+    sugar: document.querySelector("#sugar").value,
+    ice: document.querySelector("#ice").value,
+    toppings: Array.from(document.querySelectorAll("#toppings input:checked")).map(el => el.value)
+  };
+
+  const res = await fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+
+  const result = await res.json();
+  alert(result.result === "success" ? "送出成功！" : "送出失敗！");
+}
+
+loadMenu();
+</script>
+</body>
+</html>
